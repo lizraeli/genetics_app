@@ -1,25 +1,18 @@
-const { resolve } = require('path') // utility for working with file and directory paths
+const path = require('path') // utility for working with file and directory paths
 const HtmlWebpackPlugin = require('html-webpack-plugin') // html bundler, picks up your bundle.js file too
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const srcDir = resolve(__dirname, 'src') // __dirname is the directory path of the current module
-/*
-test: /\.css$/,
-use: [{
-  loader: 'style-loader',
-}, {
-  loader: 'css-loader',
-  options: {
-    modules: true,
-    localIdentName: '[name]-[local]-[hash:base64:6]', // declare naming format for css class
-    camelCase: true, // heading-one becomes headingOne in javascript
-  },
-}],
-*/
+
+const PATHS = {
+  app: path.join(__dirname, 'src'),
+  build: path.join(__dirname, 'build'),
+}
+
 module.exports = {
   entry: [
-    `${srcDir}/index.js`,
+    `${PATHS.app}/index.js`,
   ],
   output: {
+    path: PATHS.build,
     filename: 'bundle.js',
   },
   module: {
@@ -38,8 +31,8 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       title: 'Alzheimer Genetic Database',
-      template: `${srcDir}/index.html`,
+      template: `${PATHS.app}/index.html`,
     }),
-    new ExtractTextPlugin('styles.css'),
+    new ExtractTextPlugin('styles.css'), // weback automatically looks for build folder
   ],
 }
