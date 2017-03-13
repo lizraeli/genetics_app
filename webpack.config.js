@@ -1,5 +1,5 @@
 const path = require('path') // utility for working with file and directory paths
-const HtmlWebpackPlugin = require('html-webpack-plugin') // html bundler, picks up your bundle.js file too
+const HtmlWebpackPlugin = require('html-webpack-plugin') // for webpack to bundle your html
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 const PATHS = {
@@ -33,6 +33,6 @@ module.exports = {
       title: 'Alzheimer Genetic Database',
       template: `${PATHS.app}/index.html`,
     }),
-    new ExtractTextPlugin('styles.css'), // weback automatically looks for build folder
+    new ExtractTextPlugin('styles.css'), // webpack automatically looks for build folder
   ],
 }
