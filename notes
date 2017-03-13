@@ -1,0 +1,21 @@
+yarn add --dev webpack
+yarn add --dev standard standard-loader // preprocessor and linter for webpack
+yarn add --dev html-webpack-plugin // bundles html files from all html just as webpack does for js files.
+yarn add --dev webpack-dev-server // small node+express server for serving webpack bundle. Combines node and webpack commands.
+yarn add --dev webpack-dashboard // plugin to see webpack logs in a dashboard
+yarn add --dev babel-core babel-loader // for babel transpiler
+yarn add --dev babel-preset-react // transpiler for react
+yarn add --dev eslint // js linter
+  ./node_modules/.bin/eslint --init
+  select your configuration
+yarn add react react-dom // react
+
+52:09
+
+Running webpack causes it to bundle your files according to specifications
+  in your webpack.config.js file
+  - bundling all your files into one big file is required for better performance
+    otherwise you will have to load each file separately, which takes a long time.
+  - To get your bundle:
+    $webpack
+    $node bundle.js
