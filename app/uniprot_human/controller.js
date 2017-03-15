@@ -1,22 +1,23 @@
-const getDb = require("./model.js")
+const getDb = require('./model.js')
 
 
-const findByUniprotId = id => {
-	getDb().then(db => {
-		db.findOne({ name:findByUniprotId })
-		.then(entry => {
-			console.log(entry)
-		})
-		.catch(err => { 
-			console.log(err)
-		})
-	})
-	.catch(err => {
-		console.log(err)
-	})
-}
+const findByUniprotId = (id) =>
+  new Promise((resolve, reject) => {
+    getDb().then((db) => {
+      db.findOne({ name: id })
+      .then((entry) => {
+        resolve(entry)
+      })
+      .catch((err) => {
+        reject(err)
+      })
+    })
+    .catch((err) => {
+      resolve(err)
+    })
+  })
+
 
 module.exports = {
-	findByUniprotId
+  findByUniprotId,
 }
-
