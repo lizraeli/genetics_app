@@ -42,11 +42,12 @@ def parseXML(fileName, db):
 
 def main():
     # Get the file path from read_in()
-    info = get_database_info()
-    db = client[info["database"]]
-    coll = db[info["collection"]]
+    # info = get_database_info()
+    #db = client[info["database"]]
+    #coll = db[info["collection"]]
+    coll = client.big_data.genes
     xmlFileName = input('file name: ')
     parseXML(xmlFileName, coll)
-    print('success')
+    print('python: success')
 
 main()

@@ -1,17 +1,12 @@
 const spawn = require('child_process').spawn
-const xmlPath = 'uniprot-human.xml'
 
-
-function parseXml(xmlPath) {
-  let jsonPath = ''
+function parseXml() {
    // Spawning child process to execute python script
   const py = spawn('python', ['parseXML.py'], { stdio: 'inherit' })
 
-
   py.on('close', () => {
-     console.log('success')
-   })
- 
+    console.log('node: success')
+  })
 }
 
 module.exports = {
@@ -19,6 +14,8 @@ module.exports = {
 }
 
 parseXml()
+
+
 // function importJsonToMongo(filePath){
 //   var cmd = "mongoimport --jsonArray --db big_data --collection genes --drop --file data.json"
 //   // Executing command in shell
