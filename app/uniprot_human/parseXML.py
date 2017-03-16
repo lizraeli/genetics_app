@@ -3,19 +3,21 @@ from xmljson import Yahoo
 from pymongo import MongoClient
 import json
 import sys
-
-db = MongoClient().big_data.genes
+client = MongoClient()
+#db = MongoClient().dummy.genes
 parser = Yahoo()
 
+
 # Read data from stdin
-def read_in():
-    lines = sys.stdin.readlines()
-    # The input has one line - the path of the xml file
-    return lines[0]
+def get_database_info():
+    info = {}
+    info['database'] = input('database name: ')
+    info['collection'] = input('collection : ')
+    return info
 
-def parseXML(fileName):
-
-	context = etree.iterparse(fileName, tag="{*}entry");
+def parseXML(fileName, db):
+  
+	context = etree.iterparse(fileName, tag="{*}entry")
 
 	for event, element in context:
 		new_tree = etree.ElementTree(element)
@@ -40,8 +42,11 @@ def parseXML(fileName):
 
 def main():
     # Get the file path from read_in()
-    xmlFileName = "uniprot-human.xml"#read_in()
-    parseXML(xmlFileName)
+    info = get_database_info()
+    db = client[info["database"]]
+    coll = db[info["collection"]]
+    xmlFileName = input('file name: ')
+    parseXML(xmlFileName, coll)
     print('success')
 
 main()
