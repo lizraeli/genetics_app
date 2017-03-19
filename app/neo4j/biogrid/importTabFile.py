@@ -23,7 +23,7 @@ def parseTabFile(fileName):
 		transaction = graph.begin()
 
 		# Initializing counters and hash tables
-		interactionCounter = 0 
+		interactionCounter = 0
 		nodeCounter = 0
 		nodeTable = {}
 		interactionTable = {}
@@ -37,7 +37,10 @@ def parseTabFile(fileName):
 			node2 = Node("Gene", entrez_id=gene_id2)
 
 			# Creating unique key by concatenating the two id's
-			interaction = gene_id1 + gene_id2
+			if gene_id1 > gene_id2:
+				interaction = gene_id1 + gene_id2
+			else:
+				interaction = gene_id2 + gene_id1
 
 			#checking if one of the genes is missing
 			if gene_id1 == '-' or gene_id2 == '-':
@@ -46,13 +49,13 @@ def parseTabFile(fileName):
 				pass
 			else:
 				if gene_id1 not in nodeTable:
-					transaction.merge(node1)
+					#transaction.create(node1)
 					# Recording node in nodetable
 					nodeTable[gene_id1] = 1
 					nodeCounter+=1
-				
+
 				if gene_id2 not in nodeTable:
-					transaction.merge(node2)
+					#transaction.create(node2)
 					# Recording node in nodeTable
 					nodeTable[gene_id2] = 1
 					nodeCounter+=1
@@ -67,13 +70,14 @@ def parseTabFile(fileName):
 				if interactionCounter % 500 == 0:
 					transaction.commit()
 					transaction = graph.begin()
-					print("commited ", interactionCounter, " rows")
+					print("commited ", nodeCounter, " nodes")
+					print("         ", interactionCounter, " interactions")
 
 		# Commiting last unifinished transaction
 		transaction.commit()
-		# Printing stats		
+		# Printing stats
 		print('interactions:', interactionCounter)
-		print('nodes:', nodeCounter)	
+		print('nodes:', nodeCounter)
 
 
 def main():
@@ -89,5 +93,3 @@ def main():
 
 
 main()
-
-
