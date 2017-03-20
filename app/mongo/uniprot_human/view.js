@@ -1,5 +1,5 @@
 const inquirer = require('inquirer')
-const chalk = require('chalk')
+const treeify = require('treeify')
 const controller = require('./controller.js')
 
 const input = {
@@ -29,7 +29,8 @@ module.exports = () =>
         if (!obj) {
           console.log('not found')
         } else {
-          console.log(JSON.stringify(obj, null, 2))
+          // Displaying returned object as tree
+          console.log(treeify.asTree(obj, true))
         }
         inquirer.prompt(continuePrompt).then(() => {
           resolve()
