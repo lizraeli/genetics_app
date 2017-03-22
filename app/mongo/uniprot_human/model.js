@@ -1,7 +1,7 @@
 const MongoClient = require('mongodb').MongoClient
 
 // Database URL
-const url = 'mongodb://localhost:27017/big_data'
+const url = 'mongodb://localhost:27017/alzheimer_genetics'
 let collection
 
 // Retrun method to connect or fetch the collection

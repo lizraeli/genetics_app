@@ -17,6 +17,7 @@ def get_database_info():
     return info
 
 def parseXML(fileName, db):
+    counter = 0
     # When the script is called from the node app,
     # full path will point to the 'alzheimer_genetics/app' directory
     full_path = os.path.realpath('.')
@@ -28,6 +29,7 @@ def parseXML(fileName, db):
 
 
     for event, element in context:
+        counter += 1
         new_tree = etree.ElementTree(element)
         new_root = new_tree.getroot()
 
@@ -47,6 +49,9 @@ def parseXML(fileName, db):
 
         while element.getprevious() is not None:
             del element.getparent()[0]
+
+        if counter % 50 == 0:
+            print("inserted ", counter, " entries")
 
 def main():
     # Get the file path from read_in()
