@@ -1,6 +1,5 @@
 const inquirer = require('inquirer')
 const controller = require('./controller.js')
-const treeify = require('treeify')
 
 const queryPrompt = [{
   type: 'input',

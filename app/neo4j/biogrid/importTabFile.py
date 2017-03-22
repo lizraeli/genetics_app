@@ -2,9 +2,6 @@ from py2neo import authenticate, Graph,  Node, Relationship
 import csv
 
 
-
-
-
 # Read data from stdin
 def getDatabaseInfo():
 	info = {}
@@ -36,6 +33,11 @@ def parseTabFile(fileName):
 			node1 = Node("Gene", entrez_id=gene_id1)
 			node2 = Node("Gene", entrez_id=gene_id2)
 
+			# merge statement params will be populated dynamically
+			statement = '''MERGE (gene1:Gene { entrez_id: {a} })
+							MERGE (gene2:Gene { entrez_id: {b} })
+							MERGE (gene1)-[:interacts_with]-(gene2)'''
+							
 			# Creating unique key by concatenating the two id's
 			if gene_id1 > gene_id2:
 				interaction = gene_id1 + gene_id2
@@ -64,14 +66,16 @@ def parseTabFile(fileName):
 				interactionTable[interaction] = 1
 				interactionCounter += 1
 
-				relationship = Relationship(node1, "interacts_with", node2)
-				transaction.merge(relationship)
+
+
+				transaction.run(statement, a = gene_id1, b = gene_id2)
 
 				if interactionCounter % 500 == 0:
-					transaction.commit()
-					transaction = graph.begin()
 					print("commited ", nodeCounter, " nodes")
 					print("         ", interactionCounter, " interactions")
+					transaction.commit()
+					transaction = graph.begin()
+
 
 		# Commiting last unifinished transaction
 		transaction.commit()
