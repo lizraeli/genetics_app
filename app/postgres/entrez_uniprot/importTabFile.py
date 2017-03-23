@@ -1,5 +1,3 @@
-# import create_db as cdb
-# import transform_load as tl
 import os
 import sys
 import psycopg2

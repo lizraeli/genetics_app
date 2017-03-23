@@ -3,7 +3,27 @@ const fork = require('child_process').fork
 const startUniprot = require('./mongo/uniprot_human/view')
 const startBiogrid = require('./neo4j/biogrid/view')
 const entrezUniprot = require('./postgres/entrez_uniprot/view')
+const startPatient = require('./postgres/patients/view')
+const startGeneStats = require('./postgres/gene_stats/view')
 const clear = require('clear')
+const firstRun = require('first-run')
+const path = require('path')
+const PythonShell = require('python-shell')
+const connection = require('./db_info')
+
+const pythonOptions = {
+  mode: 'text',
+  pythonOptions: ['-u'],
+  scriptPath: path.join(__dirname, '/python'),
+}
+
+// Creating a python process to run in parallel to node
+const pyshell = new PythonShell('main.py', pythonOptions)
+
+// logging messages received from python print
+pyshell.on('message', (message) => {
+  console.log(message)
+})
 
 const options = [
   {
@@ -14,7 +34,8 @@ const options = [
       'uniprot - gene information',
       'biogrid - gene interactions',
       'entrez-uniprot mapping',
-      'other',
+      'patient information',
+      'gene statistics',
       'exit',
     ],
   },
@@ -49,6 +70,16 @@ const prompt = () => {
           prompt()
         })
         break
+      case 'patient information':
+        startPatient().then(() => {
+          prompt()
+        })
+        break
+      case 'gene statistics':
+        startGeneStats().then(() => {
+          prompt()
+        })
+        break
       case 'exit':
         console.log('goodbye')
         process.exit()
@@ -60,5 +91,56 @@ const prompt = () => {
   })
 }
 
-prompt()
+const firstRunPrompt = [{
+  type: 'input',
+  name: 'user',
+  message: 'postgres username',
+}, {
+  type: 'input',
+  name: 'password',
+  message: 'postgres password',
+}, {
+  type: 'input',
+  name: 'gene_expression_file_name',
+  message: 'Enter the file name for gene expression profile',
+}, {
+  type: 'input',
+  name: 'gene_expression_file_delimiter',
+  message: 'Enter the delimiter (comma: ",", tab: "t", space: " "): ',
+}, {
+  type: 'input',
+  name: 'entrez_uniprot_file_name',
+  message: 'Enter the file name for Entrez ID - Uniprot ID',
+}, {
+  type: 'input',
+  name: 'entrez_uniprot_delimiter',
+  message: 'Enter the delimiter (comma: ",", tab: "t", space: " "): ',
+}, {
+  type: 'input',
+  name: 'patient_file_name',
+  message: 'Enter the file name for patient information',
+}, {
+  type: 'input',
+  name: 'patient_file_delimiter',
+  message: 'Enter the delimiter (comma: ",", tab: "t", space: " "): ',
+},
+]
+
+//  firstRun.clear()
+if (firstRun()) {
+  clear()
+  console.log('first run')
+  // send a message to the Python script via stdin
+
+  inquirer.prompt(firstRunPrompt).then((answers) => {
+    const obj = Object.assign({ function: 'first_run' }, connection, answers)
+    const pyObj = JSON.stringify(obj)
+    pyshell.send(pyObj).end((err) => {
+      if (err) console.log(err)
+    })
+  })
+  // firstRun.clear()
+} else {
+  prompt()
+}
 // const tree = spawn('node', ['tree.js'])

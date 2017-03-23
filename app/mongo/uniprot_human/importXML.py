@@ -17,6 +17,7 @@ def get_database_info():
     return info
 
 def parseXML(fileName, db):
+    counter = 0
     full_path = os.path.realpath('.')
     # this script will be called from a node file two directories down
     context = etree.iterparse(full_path + "/files/" + fileName, tag="{*}entry")
@@ -42,12 +43,16 @@ def parseXML(fileName, db):
         while element.getprevious() is not None:
             del element.getparent()[0]
 
+        counter += 1
+        if counter % 100 == 0:
+            print('imported ', counter, ' entries')
+
 def main():
     # Get the file path from read_in()
     # info = get_database_info()
     #db = client[info["database"]]
     #coll = db[info["collection"]]
-    coll = client.big_data.genes
+    coll = client.alzheimer_genetics.uniprot
 
     xmlFileName = input('file name: ')
     parseXML(xmlFileName, coll)

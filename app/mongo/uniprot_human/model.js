@@ -12,7 +12,7 @@ module.exports = () =>
       resolve(collection)
     }
     MongoClient.connect(url).then((db) => {
-      collection = db.collection('genes')
+      collection = db.collection('uniprot')
       resolve(collection)
     })
     .catch((err) => {

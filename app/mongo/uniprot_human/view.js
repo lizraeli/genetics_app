@@ -56,7 +56,7 @@ const queryDb = () =>
         entrezUniprotController.getUniprotByEntrezId(response.entrezId)
         .then((uniprotIds) => {
           controller.findByUniprotIds(uniprotIds).then((genes) => {
-            if (!genes) {
+            if (!genes || genes === []) {
               console.log('not found')
             } else {
               const geneList = genes.map((gene) => gene.name)
@@ -81,7 +81,8 @@ const queryDb = () =>
             }
           })
         })
-        .catch(() => {
+        .catch((e) => {
+          console.log(e)
           console.log('error connecting to database')
           resolve()
         })
