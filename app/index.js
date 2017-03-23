@@ -126,7 +126,6 @@ const firstRunPrompt = [{
 },
 ]
 
-//  firstRun.clear()
 if (firstRun()) {
   clear()
   console.log('first run')
@@ -136,8 +135,8 @@ if (firstRun()) {
     const pyObj = JSON.stringify(obj)
     pyshell.send(pyObj).end((err) => {
       if (err) console.log(err)
-      uniprot.parseXml().then(() => {
-        biogrid.importXML().then(() => {
+      uniprot.importXml().then(() => {
+        biogrid.importTabFile().then(() => {
           prompt()
         })
       })

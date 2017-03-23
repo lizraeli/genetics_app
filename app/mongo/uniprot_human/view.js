@@ -132,5 +132,5 @@ const showMenu = () =>
 
 module.exports = {
   start: showMenu,
-  praseXML: utils.importXml,
+  importXml: utils.importXml,
 }

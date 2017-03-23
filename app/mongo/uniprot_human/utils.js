@@ -1,7 +1,7 @@
 const spawn = require('child_process').spawn
 const path = require('path')
 
-const importXML = () =>
+const importXml = () =>
   new Promise((resolve) => {
     try {
       // Spawning child process to execute python script
@@ -18,5 +18,5 @@ const importXML = () =>
   })
 
 module.exports = {
-  importXML,
+  importXml,
 }
