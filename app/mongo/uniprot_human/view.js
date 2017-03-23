@@ -110,7 +110,7 @@ const showMenu = () =>
             })
             break
           case 'import XML':
-            utils.parseXml().then(() => {
+            utils.importXML().then(() => {
               showMenu().then(() => {
                 resolve()
               })
@@ -130,4 +130,7 @@ const showMenu = () =>
       })
     })
 
-module.exports = showMenu
+module.exports = {
+  start: showMenu,
+  praseXML: utils.importXml,
+}

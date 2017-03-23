@@ -29,24 +29,24 @@ def firstRun(info):
     delim = info["entrez_uniprot_delimiter"]#input('Enter the delimiter (comma: ",", tab: "t", space: " "): ')
     #print("python - entrez_uniprot delimiter: ", delim)
     cdb.create_entrez_uniprot_table(psql_conn)
-    print("python path: ",  app_path + '/files/' + file_name)
-    tl.entrez_uniprot_file_insert(app_path + '/files/' + file_name, delim, psql_conn)
+    print("python path: ",  app_path + '/app/files/' + file_name)
+    tl.entrez_uniprot_file_insert(app_path + '/app/files/' + file_name, delim, psql_conn)
 
-    print('imported ', app_path + '/files/' + file_name)
+    print('imported ', app_path + '/app/files/' + file_name)
 
     file_name = info["patient_file_name"] #input('Enter the file name for patient age, gender, and education: ')
     delim = info["patient_file_delimiter"]#input('Enter the delimiter (comma: ",", tab: "t", space: " "): ')
     cdb.create_patients_table(psql_conn)
-    tl.patient_info_file_insert(app_path + '/files/' + file_name, delim, psql_conn)
+    tl.patient_info_file_insert(app_path + '/app/files/' + file_name, delim, psql_conn)
 
-    print('imported ', app_path + '/files/' + file_name)
+    print('imported ', app_path + '/app/files/' + file_name)
 
     file_name = info["gene_expression_file_name"]#input('Enter the file name for patient gene expression profile: ')
     delim =  info["gene_expression_file_delimiter"]#input('Enter the delimiter (comma: ",", tab: "t", space: " "): ')
     cdb.create_diagnosis_tables(psql_conn)
-    if tl.patient_gene_expr_file_insert(app_path + '/files/' + file_name, delim, psql_conn):
-        cdb.create_entrez_id_to_index(app_path + '/files/' + file_name, delim, psql_conn)
-        print('imported ', app_path + '/files/' + file_name)
+    if tl.patient_gene_expr_file_insert(app_path + '/app/files/' + file_name, delim, psql_conn):
+        cdb.create_entrez_id_to_index(app_path + '/app/files/' + file_name, delim, psql_conn)
+        print('imported ', app_path + '/app/files/' + file_name)
 
 def flush_input():
     try:

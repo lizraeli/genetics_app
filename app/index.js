@@ -1,7 +1,7 @@
 const inquirer = require('inquirer')
 const fork = require('child_process').fork
-const startUniprot = require('./mongo/uniprot_human/view')
-const startBiogrid = require('./neo4j/biogrid/view')
+const uniprot = require('./mongo/uniprot_human/view')
+const biogrid = require('./neo4j/biogrid/view')
 const entrezUniprot = require('./postgres/entrez_uniprot/view')
 const startPatient = require('./postgres/patients/view')
 const startGeneStats = require('./postgres/gene_stats/view')
@@ -55,13 +55,13 @@ const prompt = () => {
         break
       }
       case 'biogrid - gene interactions': {
-        startBiogrid().then(() => {
+        biogrid.start().then(() => {
           prompt()
         })
         break
       }
       case 'uniprot - gene information':
-        startUniprot().then(() => {
+        uniprot.start().then(() => {
           prompt()
         })
         break
@@ -131,12 +131,16 @@ if (firstRun()) {
   clear()
   console.log('first run')
   // send a message to the Python script via stdin
-
   inquirer.prompt(firstRunPrompt).then((answers) => {
     const obj = Object.assign({ function: 'first_run' }, connection, answers)
     const pyObj = JSON.stringify(obj)
     pyshell.send(pyObj).end((err) => {
       if (err) console.log(err)
+      uniprot.parseXml().then(() => {
+        biogrid.importXML().then(() => {
+          prompt()
+        })
+      })
     })
   })
   // firstRun.clear()

@@ -20,7 +20,7 @@ def parseXML(fileName, db):
     counter = 0
     full_path = os.path.realpath('.')
     # this script will be called from a node file two directories down
-    context = etree.iterparse(full_path + "/files/" + fileName, tag="{*}entry")
+    context = etree.iterparse(full_path + "/app/files/" + fileName, tag="{*}entry")
 
     for event, element in context:
         new_tree = etree.ElementTree(element)

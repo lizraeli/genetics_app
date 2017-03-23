@@ -1,5 +1,17 @@
 const inquirer = require('inquirer')
 const controller = require('./controller.js')
+const utils = require('./utils.js')
+
+const select = {
+  type: 'list',
+  name: 'title',
+  message: 'What would you like to do',
+  choices: [
+    'find gene interactions',
+    'import tab-separated file',
+    'return',
+  ],
+}
 
 const queryPrompt = [{
   type: 'input',
@@ -59,7 +71,7 @@ const continuePrompt = [
   },
 ]
 
-module.exports = () =>
+const queryDb = () =>
   new Promise((resolve, reject) => {
     // Prompting for login credetials
     inquirer.prompt(credentialsPrompt).then((credentials) => {
@@ -76,3 +88,42 @@ module.exports = () =>
       reject(err)
     })
   })
+
+const showMenu = () =>
+    new Promise((resolve) => {
+      // clear()
+      inquirer.prompt(select).then((choice) => {
+        switch (choice.title) {
+          case 'find gene interactions':
+            queryDb().then(() => {
+              showMenu().then(() => {
+                resolve()
+              })
+            })
+            break
+          case 'import tab-separated file':
+            utils.importTabFile().then(() => {
+              showMenu().then(() => {
+                resolve()
+              })
+            })
+            break
+          case 'return':
+            resolve()
+            break
+          default: {
+            console.log('invalid choice')
+            showMenu().then(() => {
+              resolve()
+            })
+            break
+          }
+        }
+      })
+    })
+
+
+module.exports = {
+  start: showMenu,
+  importTabFile: utils.importTabFile,
+}
